@@ -15,7 +15,14 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            buildConfigField "String", "CLIENT_ID", '"trivia_f"'
+            buildConfigField "String", "CLIENT_SECRET", '"PeY%40%40Tr1v1%40943"'
+        }
         release {
+            buildConfigField "String", "CLIENT_ID", '"trivia_f"'
+            buildConfigField "String", "CLIENT_SECRET", '"PeY%40%40Tr1v1%40943"'
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -36,7 +43,6 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.1-alpha01'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1-alpha01'
 
-
     // RX
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
@@ -52,5 +58,6 @@ dependencies {
     // Monitoring internet access
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.0'
 
+    // Miscellaneous
     implementation "org.jetbrains.anko:anko-commons:0.10.5"
 }
