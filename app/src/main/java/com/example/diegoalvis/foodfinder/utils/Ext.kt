@@ -12,6 +12,9 @@ import io.reactivex.schedulers.Schedulers
 // ViewGroup
 fun ViewGroup.inflate(layout:Int) = LayoutInflater.from(context).inflate(layout, this, false)
 
+// Fragment
+fun FragmentManager.replace(container: Int, fragment: Fragment, tag: String) { this.beginTransaction().replace(container, fragment, tag).commitAllowingStateLoss() }
+
 // RX
 fun <T> Flowable<T>.applyUISchedulers()
         = this.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -24,9 +27,4 @@ fun <T> Observable<T>.applyUISchedulers()
 
 fun <T> Observable<T>.applyTestSchedulers()
         = this.subscribeOn(Schedulers.trampoline()).observeOn(Schedulers.trampoline())
-
-// Fragment
-fun FragmentManager.replace(container: Int, fragment: Fragment, tag: String) {
-    this.beginTransaction().replace(container, fragment, tag).commitAllowingStateLoss()
-}
 

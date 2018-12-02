@@ -9,5 +9,5 @@ class Application : Application() {
         super.onCreate()
         ApiClient.getAuthToken(this)
     }
-    
+
 }
