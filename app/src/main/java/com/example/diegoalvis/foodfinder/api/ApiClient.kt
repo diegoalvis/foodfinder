@@ -1,6 +1,6 @@
 package com.diegoalvis.android.newsapp.api
 
-import android.content.Context
+import android.annotation.SuppressLint
 import io.reactivex.schedulers.Schedulers
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -12,61 +12,55 @@ import java.util.concurrent.TimeUnit
 
 object ApiClient {
 
-    const val CURRENT_SESSION = "current_session"
-    const val AUTH_TOKEN = "auth_token"
+  private val BASE_URL: String = "http://stg-api.pedidosya.com/public/v1/"
+  private var retrofit: Retrofit? = null
 
-    private val BASE_URL: String = "http://stg-api.pedidosya.com/public/v1/"
-    private var retrofit: Retrofit? = null
+  var authToken = ""
 
-    fun getInterface(context: Context): ApiInterface {
-        if (retrofit == null) {
-            retrofit = buildRetrofit(context)
-        }
-        return retrofit!!.create(ApiInterface::class.java)
+  fun getInterface(): ApiInterface {
+    if (retrofit == null) {
+      retrofit = buildRetrofit()
     }
+    return retrofit!!.create(ApiInterface::class.java)
+  }
 
-    @Synchronized
-    private fun buildRetrofit(context: Context) = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
-        .client(getOkHttpClientTokenInstance(context))
-        .build()
+  @Synchronized
+  private fun buildRetrofit() = Retrofit.Builder()
+    .baseUrl(BASE_URL)
+    .addConverterFactory(GsonConverterFactory.create())
+    .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+    .client(getOkHttpClientTokenInstance())
+    .build()
 
-    private fun getOkHttpClientTokenInstance(context: Context) =
-        OkHttpClient.Builder()
-            .readTimeout(10, TimeUnit.SECONDS)
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .addInterceptor(headersInterceptor(context))
-            .build()
+  private fun getOkHttpClientTokenInstance() =
+    OkHttpClient.Builder()
+      .readTimeout(10, TimeUnit.SECONDS)
+      .connectTimeout(10, TimeUnit.SECONDS)
+      .addInterceptor(headersInterceptor())
+      .build()
 
 
-    private fun headersInterceptor(context: Context) = Interceptor { chain ->
-        val original = chain.request()
-        val authToken = context.getSharedPreferences(CURRENT_SESSION, Context.MODE_PRIVATE).getString(AUTH_TOKEN, "-")
+  private fun headersInterceptor() = Interceptor { chain ->
+    val original = chain.request()
+    val request = original.newBuilder()
+      .header("Authorization", authToken)
+      .header("Content-Type", "application/json; charset=utf-8")
 
-        val request = original.newBuilder()
-            .header("Authorization", authToken)
-            .header("Content-Type", "application/json; charset=utf-8")
-
-        val response = chain.proceed(request.build())
-
-        if (authToken.isNullOrEmpty() || response.code() == 403) {
-            getAuthToken(context)
-        }
-        response
+    val response = chain.proceed(request.build())
+    if (authToken.isEmpty() || response.code() == 403) {
+      getAuthToken()
     }
+    response
+  }
 
-    fun getAuthToken(context: Context) {
-        getInterface(context)
-            .getAuthorizationToken()
-            .subscribe({
-                context.getSharedPreferences(CURRENT_SESSION, Context.MODE_PRIVATE)
-                    .edit()
-                    .putString(AUTH_TOKEN, it.get("access_token").asString)
-                    .apply()
-            }, {
-                it.printStackTrace()
-            })
-    }
+  @SuppressLint("CheckResult")
+  fun getAuthToken() {
+    getInterface()
+      .getAuthorizationToken()
+      .subscribe({
+        authToken = it.get("access_token").asString
+      }, {
+        it.printStackTrace()
+      })
+  }
 }

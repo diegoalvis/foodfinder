@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.diegoalvis.foodfinder.R
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.OnMapReadyCallback
 import kotlinx.android.synthetic.main.fragment_map.*
 
@@ -28,6 +29,7 @@ class MyMapFragment : Fragment(), OnMapReadyCallback {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    MapsInitializer.initialize(context)
     if (mapView != null) {
       mapView.onCreate(savedInstanceState)
       mapView.getMapAsync(this)
@@ -48,27 +50,22 @@ class MyMapFragment : Fragment(), OnMapReadyCallback {
   // region lifecycle methods
   override fun onResume() {
     super.onResume()
-    mapView.onResume()
+    mapView?.run { onPause() }
   }
 
   override fun onPause() {
     super.onPause()
-    mapView.onPause()
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-    mapView.onDestroy()
+    mapView?.run { onPause() }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    mapView.onSaveInstanceState(outState)
+    mapView?.run { onSaveInstanceState(outState) }
   }
 
   override fun onLowMemory() {
     super.onLowMemory()
-    mapView.onLowMemory()
+    mapView?.run { onLowMemory() }
   }
   // endregion
 }

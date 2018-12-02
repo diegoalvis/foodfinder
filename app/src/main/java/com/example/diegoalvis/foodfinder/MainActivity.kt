@@ -3,32 +3,40 @@ package com.example.diegoalvis.foodfinder
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.diegoalvis.android.newsapp.api.ApiClient
 import com.example.diegoalvis.foodfinder.fragments.MyMapFragment
+import com.example.diegoalvis.foodfinder.fragments.RestaurantListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-  val mapFragment = MyMapFragment.newInstance()
+  private val mapFragment = MyMapFragment.newInstance()
+  private val listFragment = RestaurantListFragment.newInstance()
 
   private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+    var fragment: Fragment? = null
     when (item.itemId) {
       R.id.navigation_home -> {
-        supportFragmentManager
-          .beginTransaction()
-          .replace(R.id.container, mapFragment, MyMapFragment.TAG)
-          .commit()
-        container
-        return@OnNavigationItemSelectedListener true
+        fragment = listFragment
       }
       R.id.navigation_dashboard -> {
-        return@OnNavigationItemSelectedListener true
+        fragment = mapFragment
       }
       R.id.navigation_notifications -> {
-        return@OnNavigationItemSelectedListener true
+
       }
     }
+
+    fragment?.let {
+      supportFragmentManager
+        .beginTransaction()
+        .replace(R.id.container, it, MyMapFragment.TAG)
+        .commit()
+        return@OnNavigationItemSelectedListener true
+    }
+
     false
   }
 
@@ -37,18 +45,5 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-  }
-
-  override fun onResume() {
-    super.onResume()
-    val service = ApiClient.getInterface(this)
-
-    service.searchRestaurants("-34.88503,-56.16561")
-      .subscribe({
-        Log.e("ALVis", " Success request")
-      }, {
-        it.printStackTrace()
-      })
-
   }
 }

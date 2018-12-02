@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diegoalvis.foodfinder.R
+import com.example.diegoalvis.foodfinder.databinding.ItemRestaurantBinding
 import com.example.diegoalvis.foodfinder.models.Restaurant
 import com.example.diegoalvis.foodfinder.utils.inflate
 
@@ -17,13 +18,13 @@ class RestaurantAdapter(private val callback:(pos: Int) -> Unit): RecyclerView.A
         }
 
     override fun onBindViewHolder(holder: RepoViewHolder, position: Int) {
-        holder.binding?.repo = data[position]
+        holder.binding?.place = data[position]
         holder.binding?.root?.tag = position
         holder.binding?.handler = this
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-        RepoViewHolder(parent.inflate(R.layout.item_repo))
+        RepoViewHolder(parent.inflate(R.layout.item_restaurant))
 
     override fun getItemCount(): Int = data.size
 
@@ -33,5 +34,5 @@ class RestaurantAdapter(private val callback:(pos: Int) -> Unit): RecyclerView.A
 }
 
 class RepoViewHolder(view: View): RecyclerView.ViewHolder(view) {
-    val binding: ItemRepoBinding? = DataBindingUtil.bind(view)
+    val binding: ItemRestaurantBinding? = DataBindingUtil.bind(view)
 }

@@ -7,10 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diegoalvis.foodfinder.R
 import com.example.diegoalvis.foodfinder.adapters.RestaurantAdapter
+import com.example.diegoalvis.foodfinder.utils.applyUISchedulers
+import com.example.diegoalvis.foodfinder.vm.SharedViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.list_restaurant_fragment.view.*
 
@@ -22,7 +25,7 @@ class RestaurantListFragment : Fragment() {
         fun newInstance() = RestaurantListFragment()
     }
 
-//    private lateinit var viewModel: SharedViewModel
+    private lateinit var viewModel: SharedViewModel
     private val adapter = RestaurantAdapter(this::onRepoClick)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -63,7 +66,7 @@ class RestaurantListFragment : Fragment() {
                     .applyUISchedulers()
                     .subscribe({
                         val startIndex = adapter.data.size
-                        adapter.data.addAll(it.items)
+                        adapter.data.addAll(it.data)
                         adapter.notifyItemRangeInserted(startIndex, adapter.data.size)
                     }, {
                         it.printStackTrace()
@@ -75,7 +78,7 @@ class RestaurantListFragment : Fragment() {
         })
 
         viewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
-        viewModel.repos.observe(this, Observer {
+        viewModel.restaurants.observe(this, Observer {
             mLoading = false
             mPreviousTotal = 0
             adapter.data = it.distinct().toMutableList()
@@ -87,5 +90,4 @@ class RestaurantListFragment : Fragment() {
     private fun onRepoClick(pos: Int) {
         viewModel.select(adapter.data[pos])
     }
-
 }
