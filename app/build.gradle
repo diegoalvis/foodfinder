@@ -17,11 +17,11 @@ android {
     buildTypes {
         debug {
             buildConfigField "String", "CLIENT_ID", '"trivia_f"'
-            buildConfigField "String", "CLIENT_SECRET", '"PeY%40%40Tr1v1%40943"'
+            buildConfigField "String", "CLIENT_SECRET", '"PeY@@Tr1v1@943"'
         }
         release {
             buildConfigField "String", "CLIENT_ID", '"trivia_f"'
-            buildConfigField "String", "CLIENT_SECRET", '"PeY%40%40Tr1v1%40943"'
+            buildConfigField "String", "CLIENT_SECRET", '"PeY@@Tr1v1@943"'
 
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

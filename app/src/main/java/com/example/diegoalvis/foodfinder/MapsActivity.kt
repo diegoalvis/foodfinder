@@ -1,8 +1,9 @@
 package com.example.diegoalvis.foodfinder
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import com.diegoalvis.android.newsapp.api.ApiClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -21,6 +22,21 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val service = ApiClient.getInterface(this)
+        service
+            .searchRestaurants("-34.88503,-56.16561")
+            .subscribe({
+                Log.e("ALVis", " Success request")
+            }, {
+                it.printStackTrace()
+            })
+
     }
 
     /**
