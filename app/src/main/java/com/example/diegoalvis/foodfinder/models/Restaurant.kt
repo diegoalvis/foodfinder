@@ -9,6 +9,7 @@ data class Restaurant(
     val description: String,
     val opened: Int, // 1 opened, 0 closed
     val isNew: Boolean,
+    val coordinates: String,
     val businessType: String,
     val nextHourClose: String,
     val hasOnlinePaymentMethods: Boolean,

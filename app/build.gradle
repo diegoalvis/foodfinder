@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 def retrofit_version = "2.5.0"
 
@@ -38,6 +39,12 @@ android {
     }
     productFlavors {
     }
+    dependencies {
+        kapt "com.android.databinding:compiler:$compiler_version"
+    }
+    kapt {
+        generateStubs = true
+    }
 }
 
 dependencies {
@@ -66,4 +73,6 @@ dependencies {
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.0'
     // Miscellaneous
     implementation 'org.jetbrains.anko:anko-commons:0.10.5'
+
+    kapt "com.android.databinding:compiler:$compiler_version"
 }

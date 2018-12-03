@@ -8,4 +8,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="opened_status">OPENED</string>
+    <string name="closed_status">CLOSED</string>
+  <string name="logo_description">logo</string>
 </resources>

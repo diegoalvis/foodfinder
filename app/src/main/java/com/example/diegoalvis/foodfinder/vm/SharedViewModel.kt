@@ -6,16 +6,16 @@ import androidx.lifecycle.ViewModel
 import com.diegoalvis.android.newsapp.api.ApiClient
 import com.example.diegoalvis.foodfinder.api.SearchRestaurantResponse
 import com.example.diegoalvis.foodfinder.models.Restaurant
-import com.google.android.gms.maps.model.LatLng
 import io.reactivex.Flowable
 import java.util.concurrent.TimeUnit
 
 open class SharedViewModel : ViewModel() {
 
-  private var pageRepoCounter = 1
-  private var lastKeyWordSearched: String = ""
+  private val NUM_OF_RESULTS = 10
+
+  private var offset = 0
+  private var lastLatLngSearched: String = ""
   private var lastSort: String? = null
-  private var lastOrder: String? = null
 
   var selected = MutableLiveData<Restaurant>()
   var apiInterface = ApiClient.getInterface()
@@ -28,24 +28,23 @@ open class SharedViewModel : ViewModel() {
   }
 
   // fetch restaurants
-  fun searchRestaurants(keyWord: String, sort: String? = null, order: String? = null, page: Int = 1): Flowable<SearchRestaurantResponse> {
-    lastKeyWordSearched = keyWord
+  fun searchRestaurants(latLng: String, sort: String? = null, newSearch: Boolean = false): Flowable<SearchRestaurantResponse> {
+    lastLatLngSearched = latLng
     lastSort = sort
-    lastOrder = order
-    if (page == 1) {
-      pageRepoCounter = 1
+    if (newSearch) {
+      offset = 0
     }
 
     isLoading.set(true)
     return apiInterface
-      .searchRestaurants(LatLng(12.0, 123.0).toString())
+      .searchRestaurants(latLng, offset = offset, max = NUM_OF_RESULTS)
       .throttleFirst(1, TimeUnit.SECONDS)
       .doOnError { isLoading.set(false) }
       .doOnComplete { isLoading.set(false) }
   }
 
   fun getMoreRepos(): Flowable<SearchRestaurantResponse> {
-    pageRepoCounter += 1
-    return searchRestaurants(lastKeyWordSearched, lastSort, lastOrder, pageRepoCounter)
+    offset += NUM_OF_RESULTS
+    return searchRestaurants(lastLatLngSearched, lastSort)
   }
 }
