@@ -1,6 +1,7 @@
 package com.example.diegoalvis.foodfinder.fragments
 
 import android.Manifest
+import android.app.Activity
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -41,24 +43,6 @@ class MyMapFragment : Fragment(), OnMapReadyCallback {
     val v = inflater.inflate(R.layout.fragment_map, container, false)
     viewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
     return v
-  }
-
-  private val mLocationListener = object : LocationListener {
-    override fun onLocationChanged(location: Location?) {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onProviderEnabled(provider: String?) {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onProviderDisabled(provider: String?) {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -129,7 +113,7 @@ class MyMapFragment : Fragment(), OnMapReadyCallback {
   }
 
   private fun goToMyLocation(): Boolean {
-    if (map.myLocation != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
+    if (map.myLocation != null) {
       map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(map.myLocation.latitude, map.myLocation.longitude), 14.0f))
     }
     return true
@@ -138,18 +122,19 @@ class MyMapFragment : Fragment(), OnMapReadyCallback {
 
   private fun validatePermissions() {
     context?.let {
-      if (ContextCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-        || ContextCompat.checkSelfPermission(it, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        requestLocationPermission()
-      } else {
+      if (ContextCompat.checkSelfPermission(it, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        && ContextCompat.checkSelfPermission(it, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
         map.isMyLocationEnabled = true
         map.setOnMyLocationButtonClickListener { goToMyLocation() }
+      } else {
+        requestLocationPermission()
       }
     }
   }
 
   private fun requestLocationPermission() {
-//    ActivityCompat.requestPermissions(this@MyMapFragment.activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), LOCATION_REQUEST_CODE)
+    ActivityCompat.requestPermissions(activity as Activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), LOCATION_REQUEST_CODE)
   }
 
   // region lifecycle methods
