@@ -19,7 +19,7 @@ interface ApiInterface {
   fun searchRestaurants(@Query("point") point: String,
                         @Query("country") country: Int = 1,
                         @Query("offset") offset: Int = 0,
-                        @Query("max") max: Int = 10): Flowable<SearchRestaurantResponse>
+                        @Query("max") max: Int = 20): Flowable<SearchRestaurantResponse>
 
   /**
    * Gets the authorization token to perform request to the server

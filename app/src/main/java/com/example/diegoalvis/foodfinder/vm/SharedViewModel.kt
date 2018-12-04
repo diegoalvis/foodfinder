@@ -12,17 +12,19 @@ import java.util.concurrent.TimeUnit
 
 open class SharedViewModel : ViewModel() {
 
-  private val NUM_OF_RESULTS = 20
+  companion object {
+    const val NUM_OF_RESULTS = 20
+  }
 
-  private var offset = 0
-  private var lastLatLngSearched: String = ""
   private var lastSort: String? = null
 
-  val selected = MutableLiveData<Restaurant>()
-  val apiInterface = ApiClient.getInterface()
-  val isLoading: ObservableBoolean = ObservableBoolean(false)
-  val restaurants = MutableLiveData<MutableList<Restaurant>>()
-  val newSearchObserver = MutableLiveData<Boolean>()
+  var offset = 0
+  var lastLatLngSearched: String = ""
+  var selected = MutableLiveData<Restaurant>()
+  var apiInterface = ApiClient.getInterface()
+  var isLoading: ObservableBoolean = ObservableBoolean(false)
+  var restaurants = MutableLiveData<MutableList<Restaurant>>()
+  var newSearchObserver = MutableLiveData<Boolean>()
 
   fun select(item: Restaurant) {
     selected.value = item
@@ -40,20 +42,11 @@ open class SharedViewModel : ViewModel() {
     return apiInterface
       .searchRestaurants(latLng, offset = offset, max = NUM_OF_RESULTS)
       .throttleFirst(1, TimeUnit.SECONDS)
-      .applyUISchedulers()
-      .doOnNext { response ->
-        if (newSearch) {
-          restaurants.value = response.data
-        } else {
-          restaurants.value?.addAll(response.data)
-        }
-        newSearchObserver.value = newSearch
-      }
       .doOnError { isLoading.set(false) }
       .doOnComplete { isLoading.set(false) }
   }
 
-  fun getMoreRepos(): Flowable<SearchRestaurantResponse> {
+  fun getMoreRestaurants(): Flowable<SearchRestaurantResponse> {
     offset += NUM_OF_RESULTS
     return searchRestaurants(lastLatLngSearched, lastSort)
   }

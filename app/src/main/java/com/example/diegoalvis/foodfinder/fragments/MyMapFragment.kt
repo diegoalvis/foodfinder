@@ -82,6 +82,8 @@ class MyMapFragment : Fragment(), OnMapReadyCallback {
           .subscribe({
             buttonSearch.visibility = View.GONE
             progress.visibility = View.GONE
+            viewModel.restaurants.value = it.data
+            viewModel.newSearchObserver.value = true
           }, {
             it.printStackTrace()
             progress.visibility = View.GONE

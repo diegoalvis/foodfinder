@@ -73,7 +73,12 @@ class RestaurantListFragment : Fragment() {
           val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
           viewModel
               .searchRestaurants("${location.latitude},${location.longitude}", newSearch = true)
-              .subscribe({ progress.visibility = View.GONE }, { it.printStackTrace() })
+              .applyUISchedulers()
+              .subscribe({
+                progress.visibility = View.GONE
+                viewModel.restaurants.value = it.data
+                viewModel.newSearchObserver.value = true
+              }, { it.printStackTrace() })
         } else {
           ActivityCompat.requestPermissions(activity as Activity,
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
@@ -118,10 +123,12 @@ class RestaurantListFragment : Fragment() {
       @SuppressLint("CheckResult")
       fun onLoadMore() {
         viewModel
-          .getMoreRepos()
+          .getMoreRestaurants()
           .applyUISchedulers()
           .subscribe({
             val startIndex = adapter.data.size
+            viewModel.restaurants.value?.addAll(it.data)
+            viewModel.newSearchObserver.value = false
             adapter.data.addAll(it.data)
             adapter.notifyItemRangeInserted(startIndex, adapter.data.size)
           }, { throwable ->
