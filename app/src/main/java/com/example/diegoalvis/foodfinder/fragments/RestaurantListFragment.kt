@@ -32,7 +32,6 @@ class RestaurantListFragment : Fragment() {
   private val adapter = RestaurantAdapter(this::onRepoClick)
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
     val binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, R.layout.list_restaurant_fragment, container, false)
     val view = binding.root
 
@@ -42,7 +41,6 @@ class RestaurantListFragment : Fragment() {
     viewModel = ViewModelProviders.of(activity!!).get(SharedViewModel::class.java)
 
     binding.setVariable(BR.isLoading, viewModel.isLoading)
-
     setLazyLoadScrolling(view)
 
     return view
@@ -50,10 +48,7 @@ class RestaurantListFragment : Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-
-    viewModel.searchRestaurants("-34.88503,-56.16561", newSearch = true)
-      .applyUISchedulers()
-      .subscribe({ viewModel.restaurants.value = it.data }, { it.printStackTrace() })
+    viewModel.restaurants.value?.let { adapter.data = it }
   }
 
   private fun onRepoClick(pos: Int) {
@@ -107,7 +102,7 @@ class RestaurantListFragment : Fragment() {
     viewModel.restaurants.observe(this, Observer {
       mLoading = false
       mPreviousTotal = 0
-      adapter.data = it.distinct().toMutableList()
+//      adapter.data = it.distinct().toMutableList()
     })
   }
 

@@ -27,23 +27,20 @@ class MainActivity : AppCompatActivity() {
 
   override fun onResume() {
     super.onResume()
-    supportFragmentManager.replace(R.id.container, listFragment, RestaurantListFragment.TAG)
+    supportFragmentManager.replace(R.id.container, mapFragment, RestaurantListFragment.TAG)
   }
 
   private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
     var fragment: Fragment? = null
     var tag = ""
     when (item.itemId) {
-      R.id.navigation_home -> {
-        fragment = listFragment
-        tag = RestaurantListFragment.TAG
-      }
-      R.id.navigation_dashboard -> {
+      R.id.navigation_map -> {
         fragment = mapFragment
         tag = MyMapFragment.TAG
       }
-      R.id.navigation_notifications -> {
-
+      R.id.navigation_list -> {
+        fragment = listFragment
+        tag = RestaurantListFragment.TAG
       }
     }
 

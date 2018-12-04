@@ -1,14 +1,17 @@
 <resources>
-    <string name="app_name">Food Finder</string>
-    <string name="title_activity_maps">Map</string>
+  <string name="app_name">Food Finder</string>
+  <string name="title_activity_maps">Map</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="opened_status">OPENED</string>
-    <string name="closed_status">CLOSED</string>
+  <!-- TODO: Remove or change this placeholder text -->
+  <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="title_activity_main">MainActivity</string>
+  <string name="title_home">Home</string>
+  <string name="title_dashboard">Dashboard</string>
+  <string name="title_notifications">Notifications</string>
+  <string name="opened_status">OPENED</string>
+  <string name="closed_status">CLOSED</string>
   <string name="logo_description">logo</string>
+  <string name="title_list">List</string>
+  <string name="title_map">Map</string>
+  <string name="title_list_restaurant">Restaurants</string>
 </resources>

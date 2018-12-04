@@ -1,5 +1,7 @@
 package com.example.diegoalvis.foodfinder.models
 
+import com.google.android.gms.maps.model.LatLng
+
 data class Restaurant(
     val deliveryTimeMinMinutes: String,
     val cityName: String,
@@ -20,5 +22,6 @@ data class Restaurant(
     val ratingScore: Float,
     val logo: String,
     val address: String,
-    val paymentMethods: String
+    val paymentMethods: String,
+    var point: LatLng
 )
