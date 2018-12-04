@@ -39,7 +39,7 @@ class ShareViewModelTest {
   }
 
   @Test
-  fun searchRepositories() {
+  fun loadMoreRestaurants() {
     sharedViewModel.lastLatLngSearched = POINT_TEST
 
     val searchResponse = Flowable.just(searchResponseTest)
