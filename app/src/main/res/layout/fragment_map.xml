@@ -39,6 +39,7 @@
       android:layout_gravity="center"
       android:tint="@color/colorPrimaryDark"
       android:elevation="@dimen/base_card_dimen"
+      android:layout_marginTop="-14dp"
       android:scaleType="fitXY"
       android:layout_width="35dp"
       android:layout_height="35dp"/>

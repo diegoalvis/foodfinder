@@ -2,11 +2,13 @@ package com.example.diegoalvis.foodfinder.fragments
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationProvider
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -41,6 +43,24 @@ class MyMapFragment : Fragment(), OnMapReadyCallback {
     return v
   }
 
+  private val mLocationListener = object : LocationListener {
+    override fun onLocationChanged(location: Location?) {
+      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onProviderEnabled(provider: String?) {
+      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onProviderDisabled(provider: String?) {
+      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+      TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     if (mapView != null) {
@@ -48,6 +68,22 @@ class MyMapFragment : Fragment(), OnMapReadyCallback {
       mapView.getMapAsync(this)
     }
 
+    setSearchEvent()
+
+    viewModel.restaurants.observe(this, Observer { items ->
+      restaurantMarkerList.clear()
+      items.forEach {
+        val latLng = it.coordinates.split(",")
+        val latitude = latLng[0].toDouble()
+        val longitude = latLng[1].toDouble()
+        it.point = LatLng(latitude, longitude)
+        restaurantMarkerList.add(it)
+      }
+      mapView.postDelayed({ addRestaurantMarkers(restaurantMarkerList) }, 500)
+    })
+  }
+
+  private fun setSearchEvent() {
     buttonSearch.setOnClickListener { buttonSearch ->
       map.cameraPosition.target.let { position ->
         progress.visibility = View.VISIBLE
@@ -62,18 +98,6 @@ class MyMapFragment : Fragment(), OnMapReadyCallback {
           })
       }
     }
-
-    viewModel.restaurants.observe(this, Observer { items ->
-      restaurantMarkerList.clear()
-      items.forEach {
-        val latLng = it.coordinates.split(",")
-        val latitude = latLng[0].toDouble()
-        val longitude = latLng[1].toDouble()
-        it.point = LatLng(latitude, longitude)
-        restaurantMarkerList.add(it)
-      }
-      mapView.postDelayed({ addRestaurantMarkers(restaurantMarkerList) }, 500)
-    })
   }
 
 
@@ -100,11 +124,14 @@ class MyMapFragment : Fragment(), OnMapReadyCallback {
       map.uiSettings.isMyLocationButtonEnabled = true
       map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(-34.88503, -56.16561), 14.0f)) // Montevideo
       map.setOnCameraMoveListener { buttonSearch.visibility = View.VISIBLE }
+      validatePermissions()
     }
   }
 
   private fun goToMyLocation(): Boolean {
-    validatePermissions()
+    if (map.myLocation != null) { // Check to ensure coordinates aren't null, probably a better way of doing this...
+      map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(map.myLocation.latitude, map.myLocation.longitude), 14.0f))
+    }
     return true
   }
 
