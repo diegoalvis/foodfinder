@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
   <data>
     <import type="android.view.View"/>
     <variable name="isLoading" type="androidx.databinding.ObservableBoolean"/>
@@ -13,7 +14,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#eceeed"
         android:elevation="@dimen/tiny_margin"
         tools:showIn="@layout/activity_main"
@@ -35,6 +36,16 @@
         android:indeterminateTint="?android:colorAccent"
         android:elevation="@dimen/tiny_margin"
         android:visibility="@{isLoading ? View.VISIBLE : View.GONE}"/>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:src="@android:drawable/ic_menu_search"
+        android:tint="@android:color/white"
+        android:layout_gravity="end|bottom"/>
 
   </FrameLayout>
 </layout>

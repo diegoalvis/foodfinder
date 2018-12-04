@@ -12,17 +12,17 @@ import java.util.concurrent.TimeUnit
 
 open class SharedViewModel : ViewModel() {
 
-  private val NUM_OF_RESULTS = 10
+  private val NUM_OF_RESULTS = 20
 
   private var offset = 0
   private var lastLatLngSearched: String = ""
   private var lastSort: String? = null
 
-  var selected = MutableLiveData<Restaurant>()
-  var apiInterface = ApiClient.getInterface()
-  var isLoading: ObservableBoolean = ObservableBoolean(false)
-  var restaurants = MutableLiveData<MutableList<Restaurant>>()
-
+  val selected = MutableLiveData<Restaurant>()
+  val apiInterface = ApiClient.getInterface()
+  val isLoading: ObservableBoolean = ObservableBoolean(false)
+  val restaurants = MutableLiveData<MutableList<Restaurant>>()
+  val newSearchObserver = MutableLiveData<Boolean>()
 
   fun select(item: Restaurant) {
     selected.value = item
@@ -42,7 +42,12 @@ open class SharedViewModel : ViewModel() {
       .throttleFirst(1, TimeUnit.SECONDS)
       .applyUISchedulers()
       .doOnNext { response ->
-        if (newSearch) restaurants.value = response.data else restaurants.value?.addAll(response.data)
+        if (newSearch) {
+          restaurants.value = response.data
+        } else {
+          restaurants.value?.addAll(response.data)
+        }
+        newSearchObserver.value = newSearch
       }
       .doOnError { isLoading.set(false) }
       .doOnComplete { isLoading.set(false) }

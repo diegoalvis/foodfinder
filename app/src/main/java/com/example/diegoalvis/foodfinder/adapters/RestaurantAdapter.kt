@@ -24,7 +24,7 @@ class RestaurantAdapter(private val callback: (pos: Int) -> Unit) : RecyclerView
     holder.binding?.root?.tag = position
     holder.binding?.handler = this
     val listImages = listOf(R.drawable.fallback_burguer, R.drawable.fallback_pizza, R.drawable.fallback_tacos)
-    Picasso.get().load(listImages[Random().nextInt(101).rem(3)]).into(holder.binding?.logo)
+//    Picasso.get().load(listImages[Random().nextInt(101).rem(3)]).into(holder.binding?.logo)
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
