@@ -19,7 +19,7 @@ min SDK version 21
 ## About author
 Diego Alvis
 - diegoalvispal@gmail.com
-- [LinkedIn](https://www.linkedin.com/in/diego-alvis-palencia-7823a5130/)
+- [LinkedIn Profile](https://www.linkedin.com/in/diego-alvis-palencia-7823a5130/)
 
 
 ## LICENSE
